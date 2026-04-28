@@ -12,7 +12,7 @@ import joblib
 import os
 
 # Configuracion
-DATA_NPZ = "db/processed/scaled_data.npz"
+DATA_NPZ = "db/processed/scaled_data_v1.npz"
 MODEL_PATH = "output/models/rf_model_v2.joblib"
 PRED_PATH = "db/processed/rf_predictions_v2.npz"
 RANDOM_STATE = 42

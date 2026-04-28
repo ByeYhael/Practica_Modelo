@@ -1,8 +1,9 @@
 """
-Stacking: Regresion Lineal como meta-modelo sobre predicciones de Random Forest.
-RF es el modelo base, LR calibra el sesgo residual.
-Input:  db/processed/rf_predictions.npz
-Output: output/models/lr_meta_model.joblib, output/tables/models/evaluation_results.csv
+Stacking v2: Regresion Lineal como meta-modelo sobre predicciones de RF v2.
+RF optimizado es el modelo base, LR calibra el sesgo residual.
+Input:  db/processed/rf_predictions_v2.npz
+Output: output/models/lr_meta_model_v2.joblib, output/tables/models/evaluation_results_v2.csv
+Incluye comparacion v1 vs v2 en la tabla.
 """
 
 import numpy as np
@@ -11,10 +12,10 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import joblib
 import os
 
-# Configuracion
-RF_PRED_PATH = "db/processed/rf_predictions.npz"
-LR_MODEL_PATH = "output/models/lr_meta_model.joblib"
-EVAL_PATH = "output/tables/models/evaluation_results.csv"
+# Configuracion (v2)
+RF_PRED_PATH = "db/processed/rf_predictions_v2.npz"
+LR_MODEL_PATH = "output/models/lr_meta_model_v2.joblib"
+EVAL_PATH = "output/tables/models/evaluation_results_v2.csv"
 RANDOM_STATE = 42
 
 

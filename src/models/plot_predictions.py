@@ -1,7 +1,9 @@
 """
-Genera graficos de predicciones vs real para RF solo y Stacking RF+LR.
-- predictions_log_return.png: scatter en escala log_return
-- predictions_close.png: predicciones reconvertidas a precio Close
+Genera graficos v2 de predicciones vs real para RF optimizado y Stacking RF+LR.
+- predictions_log_return_v2.png: scatter en escala log_return
+- predictions_close_v2.png: predicciones reconvertidas a precio Close
+- predictions_comparison_v2.png: barras comparativas v2
+Incluye comparacion contra v1 en los titulos.
 """
 
 import numpy as np
@@ -11,10 +13,10 @@ import matplotlib
 matplotlib.use('Agg')
 import os
 
-# Configuracion
-RF_PRED_PATH = "db/processed/rf_predictions.npz"
+# Configuracion (v2)
+RF_PRED_PATH = "db/processed/rf_predictions_v2.npz"
 FEATURES_PATH = "db/processed/features_v1.csv"
-LR_MODEL_PATH = "output/models/lr_meta_model.joblib"
+LR_MODEL_PATH = "output/models/lr_meta_model_v2.joblib"
 FIG_DIR = "output/figures/models"
 RANDOM_STATE = 42
 
@@ -98,7 +100,7 @@ if __name__ == "__main__":
     ax.axis('equal')
 
     plt.tight_layout()
-    path_log = os.path.join(FIG_DIR, "predictions_log_return.png")
+    path_log = os.path.join(FIG_DIR, "predictions_log_return_v2.png")
     plt.savefig(path_log, dpi=150, bbox_inches='tight')
     plt.close()
     print(f"Figura guardada: {path_log}")
@@ -107,52 +109,73 @@ if __name__ == "__main__":
     fig, ax = plt.subplots(figsize=(14, 6))
 
     ax.plot(dates, close_real, 'b-', linewidth=1.5, label='Close Real', alpha=0.8)
-    ax.plot(dates, close_pred_rf, 'orange', linewidth=1, label='RF Predicho', alpha=0.7, linestyle='--')
-    ax.plot(dates, close_pred_stack, 'green', linewidth=1, label='Stacking RF+LR Predicho', alpha=0.7, linestyle='--')
+    ax.plot(dates, close_pred_rf, 'orange', linewidth=1, label='RF v2 Predicho', alpha=0.7, linestyle='--')
+    ax.plot(dates, close_pred_stack, 'green', linewidth=1, label='Stacking v2 RF+LR Predicho', alpha=0.7, linestyle='--')
 
     ax.set_xlabel('Fecha')
     ax.set_ylabel('Precio Close ($)')
-    ax.set_title('Predicción de Precio Close - SBUX (Test: 2025-2026)')
+    ax.set_title('Predicción de Precio Close - SBUX v2 (Test: 2025-2026)')
     ax.legend()
     ax.grid(True, alpha=0.3)
     plt.xticks(rotation=45)
     plt.tight_layout()
 
-    path_close = os.path.join(FIG_DIR, "predictions_close.png")
+    path_close = os.path.join(FIG_DIR, "predictions_close_v2.png")
     plt.savefig(path_close, dpi=150, bbox_inches='tight')
     plt.close()
     print(f"Figura guardada: {path_close}")
 
-    # ========== FIGURA 3: Comparativa metricas ==========
+    # ========== FIGURA 3: Comparativa metricas v1 vs v2 ==========
     from sklearn.metrics import r2_score, mean_squared_error
 
-    fig, ax = plt.subplots(figsize=(8, 5))
-    modelos = ['Random Forest', 'Stacking RF+LR']
-    r2_vals = [r2_score(y_test, y_pred_rf_test), r2_score(y_test, y_pred_stack_test)]
-    rmse_vals = [np.sqrt(mean_squared_error(y_test, y_pred_rf_test)),
-                 np.sqrt(mean_squared_error(y_test, y_pred_stack_test))]
+    # Metricas v2 (actuales)
+    r2_rf_v2 = r2_score(y_test, y_pred_rf_test)
+    rmse_rf_v2 = np.sqrt(mean_squared_error(y_test, y_pred_rf_test))
+    r2_stack_v2 = r2_score(y_test, y_pred_stack_test)
+    rmse_stack_v2 = np.sqrt(mean_squared_error(y_test, y_pred_stack_test))
 
-    x = np.arange(len(modelos))
-    width = 0.35
+    # Metricas v1 (hardcodeadas del resultado anterior)
+    r2_rf_v1 = 0.007125
+    rmse_rf_v1 = 0.021146
+    r2_stack_v1 = -0.145994
+    rmse_stack_v1 = 0.022718
 
-    ax.bar(x - width/2, r2_vals, width, label='R²', color=['blue', 'green'])
-    ax.bar(x + width/2, rmse_vals, width, label='RMSE', color=['lightblue', 'lightgreen'])
+    fig, axes = plt.subplots(1, 2, figsize=(14, 5))
 
-    ax.set_ylabel('Valor')
-    ax.set_title('Comparación de Métricas - RF vs Stacking')
+    # Grafico R2
+    ax = axes[0]
+    x = np.arange(2)
+    width = 0.30
+    ax.bar(x - width/2, [r2_rf_v1, r2_stack_v1], width, label='v1 (200/15)', color='lightgray', edgecolor='gray')
+    ax.bar(x + width/2, [r2_rf_v2, r2_stack_v2], width, label='v2 (optimizado)', color=['steelblue', 'seagreen'])
+    ax.set_ylabel('R²')
+    ax.set_title('Comparación R²: v1 vs v2')
     ax.set_xticks(x)
-    ax.set_xticklabels(modelos)
+    ax.set_xticklabels(['Random Forest', 'Stacking RF+LR'])
     ax.legend()
     ax.grid(True, alpha=0.3, axis='y')
+    for i, (v1, v2) in enumerate(zip([r2_rf_v1, r2_stack_v1], [r2_rf_v2, r2_stack_v2])):
+        ax.text(i - width/2, v1 + 0.005, f'{v1:.4f}', ha='center', va='bottom', fontsize=8, color='gray')
+        ax.text(i + width/2, v2 + 0.005, f'{v2:.4f}', ha='center', va='bottom', fontsize=8)
 
-    for i, (r2, rmse) in enumerate(zip(r2_vals, rmse_vals)):
-        ax.text(i - width/2, r2 + 0.001, f'{r2:.4f}', ha='center', va='bottom', fontsize=9)
-        ax.text(i + width/2, rmse + 0.001, f'{rmse:.4f}', ha='center', va='bottom', fontsize=9)
+    # Grafico RMSE
+    ax = axes[1]
+    ax.bar(x - width/2, [rmse_rf_v1, rmse_stack_v1], width, label='v1 (200/15)', color='lightgray', edgecolor='gray')
+    ax.bar(x + width/2, [rmse_rf_v2, rmse_stack_v2], width, label='v2 (optimizado)', color=['steelblue', 'seagreen'])
+    ax.set_ylabel('RMSE')
+    ax.set_title('Comparación RMSE: v1 vs v2')
+    ax.set_xticks(x)
+    ax.set_xticklabels(['Random Forest', 'Stacking RF+LR'])
+    ax.legend()
+    ax.grid(True, alpha=0.3, axis='y')
+    for i, (v1, v2) in enumerate(zip([rmse_rf_v1, rmse_stack_v1], [rmse_rf_v2, rmse_stack_v2])):
+        ax.text(i - width/2, v1 + 0.0005, f'{v1:.4f}', ha='center', va='bottom', fontsize=8, color='gray')
+        ax.text(i + width/2, v2 + 0.0005, f'{v2:.4f}', ha='center', va='bottom', fontsize=8)
 
     plt.tight_layout()
-    path_comp = os.path.join(FIG_DIR, "predictions_comparison.png")
+    path_comp = os.path.join(FIG_DIR, "predictions_comparison_v2.png")
     plt.savefig(path_comp, dpi=150, bbox_inches='tight')
     plt.close()
     print(f"Figura guardada: {path_comp}")
 
-    print(f"\n✅ Todas las figuras guardadas en: {FIG_DIR}")
+    print(f"\n✅ Figuras v2 guardadas en: {FIG_DIR}")
