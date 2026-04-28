@@ -190,7 +190,6 @@ db/
 *.keras
 
 # Output directories (keep structure, ignore generated files)
-output/figures/*
 output/tables/*
 output/models/*
 output/reports/*
