@@ -183,4 +183,20 @@ cython_debug/
 Fuente/
 db/
 
+# Model artifacts
+*.h5
+*.pkl
+*.joblib
+*.keras
+
+# Output directories (keep structure, ignore generated files)
+output/figures/*
+output/tables/*
+output/models/*
+output/reports/*
+
+# ML experiment tracking
+mlruns/
+mlflow/
+
 skills/

@@ -1,0 +1,22 @@
+# Project paths
+project_root: "."
+
+# Raw data
+raw_data: "db/archive/SBUX.csv"
+
+# Processed data
+processed_data: "db/processed/sbux_clean.csv"
+
+# Output directories
+tables: "output/tables"
+figures: "output/figures"
+models: "output/models"
+reports: "output/reports"
+
+# Source code
+src:
+  data: "src/data"
+  analysis: "src/analysis"
+  models: "src/models"
+  reports: "src/reports"
+  utils: "src/utils"

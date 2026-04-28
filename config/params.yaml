@@ -1,0 +1,25 @@
+# Global parameters
+random_state: 42
+test_size: 0.2
+val_size: 0.1
+
+# Time series
+date_column: "Date"
+target_column: "Close"
+frequency: "B"  # business days
+
+# Data processing
+impute_method: "forward_fill"
+drop_na: false
+
+# Model evaluation
+metrics:
+  - "mse"
+  - "rmse"
+  - "mae"
+  - "r2"
+  - "rse"
+
+# Cross-validation
+cv_folds: 5
+cv_method: "timeseries"
