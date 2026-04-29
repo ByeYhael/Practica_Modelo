@@ -1,0 +1,9 @@
+serie,test,statistic,pvalue,critical_1pct,critical_5pct,critical_10pct,is_stationary,n_lags
+Close,ADF,-1.909525,0.327593,-3.432709,-2.862582,-2.567325,False,10.0
+Close,KPSS,6.971246,0.01,,0.463,,False,
+log(Close),ADF,-2.211566,0.202074,-3.432708,-2.862582,-2.567325,False,9.0
+log(Close),KPSS,7.239637,0.01,,0.463,,False,
+diff(Close),ADF,-16.694178,0.0,-3.432709,-2.862582,-2.567325,True,9.0
+diff(Close),KPSS,0.050065,0.1,,0.463,,True,
+log_return,ADF,-18.247105,0.0,-3.432708,-2.862582,-2.567325,True,8.0
+log_return,KPSS,0.098845,0.1,,0.463,,True,
