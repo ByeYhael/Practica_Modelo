@@ -1,20 +1,23 @@
 """
-Entrenamiento de Random Forest como modelo base para el stacking (v2).
-Optimiza hiperparametros con GridSearchCV sobre validation set.
-Guarda en output/models/rf_model_v2.joblib y db/processed/rf_predictions_v2.npz.
+Entrenamiento de Random Forest como modelo base para el stacking.
+Recibe version como argumento (v1/v2/v3).
+Optimiza hiperparametros con GridSearch sobre validation set.
+Guarda en output/models/rf_model_VERSION.joblib y db/processed/rf_predictions_VERSION.npz.
+Uso: python3 src/models/train_rf.py v3
 """
 
 import numpy as np
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import joblib
 import os
+import sys
 
 # Configuracion
-DATA_NPZ = "db/processed/scaled_data_v1.npz"
-MODEL_PATH = "output/models/rf_model_v2.joblib"
-PRED_PATH = "db/processed/rf_predictions_v2.npz"
+version = sys.argv[1] if len(sys.argv) > 1 else "v1"
+DATA_NPZ = f"db/processed/scaled_data_{version}.npz"
+MODEL_PATH = f"output/models/rf_model_{version}.joblib"
+PRED_PATH = f"db/processed/rf_predictions_{version}.npz"
 RANDOM_STATE = 42
 
 
@@ -121,19 +124,15 @@ if __name__ == "__main__":
     y_pred_test = rf.predict(X_test)
 
     # Metricas
-    metrics_train = calcular_metricas(y_train, y_pred_train, "RF_v2_train")
-    metrics_val = calcular_metricas(y_val, y_pred_val, "RF_v2_val")
-    metrics_test = calcular_metricas(y_test, y_pred_test, "RF_v2_test")
+    metrics_train = calcular_metricas(y_train, y_pred_train, f"RF_{version}_train")
+    metrics_val = calcular_metricas(y_val, y_pred_val, f"RF_{version}_val")
+    metrics_test = calcular_metricas(y_test, y_pred_test, f"RF_{version}_test")
 
-    print(f"\nMetricas Random Forest v2 (optimizado):")
+    print(f"\nMetricas Random Forest {version} (optimizado):")
     imprimir_metricas(metrics_train, metrics_val, metrics_test)
 
-    # Comparacion v1 vs v2 (v1 = config original 200/15)
-    r2_test_v2 = metrics_test["r2"]
-    rmse_test_v2 = metrics_test["rmse"]
-    print(f"\nComparacion con v1:")
-    print(f"  v1 (RF 200/15): R2_test={0.007125:.4f}, RMSE_test={0.021146:.4f}")
-    print(f"  v2 (RF optimo): R2_test={r2_test_v2:.4f}, RMSE_test={rmse_test_v2:.4f}")
+    print(f"\nMetricas RF {version}:")
+    imprimir_metricas(metrics_train, metrics_val, metrics_test)
 
     # Overfitting
     diff_r2 = metrics_train["r2"] - metrics_test["r2"]
@@ -144,14 +143,14 @@ if __name__ == "__main__":
     # Importancia
     imprimir_importancia(rf, features)
 
-    # Guardar modelo v2
+    # Guardar modelo
     os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)
     joblib.dump(rf, MODEL_PATH)
-    print(f"\nModelo v2 guardado: {MODEL_PATH} ({os.path.getsize(MODEL_PATH)/1024:.1f} KB)")
+    print(f"\nModelo {version} guardado: {MODEL_PATH} ({os.path.getsize(MODEL_PATH)/1024:.1f} KB)")
 
-    # Guardar predicciones para stacking v2
+    # Guardar predicciones para stacking
     os.makedirs(os.path.dirname(PRED_PATH), exist_ok=True)
     np.savez(PRED_PATH,
              y_pred_train=y_pred_train, y_pred_val=y_pred_val, y_pred_test=y_pred_test,
              y_train=y_train, y_val=y_val, y_test=y_test)
-    print(f"Predicciones v2 guardadas: {PRED_PATH}")
+    print(f"Predicciones {version} guardadas: {PRED_PATH}")

@@ -1,9 +1,10 @@
 """
-Stacking v2: Regresion Lineal como meta-modelo sobre predicciones de RF v2.
-RF optimizado es el modelo base, LR calibra el sesgo residual.
-Input:  db/processed/rf_predictions_v2.npz
-Output: output/models/lr_meta_model_v2.joblib, output/tables/models/evaluation_results_v2.csv
-Incluye comparacion v1 vs v2 en la tabla.
+Stacking: Regresion Lineal como meta-modelo sobre predicciones de RF.
+Recibe version como argumento (v1/v2/v3).
+RF es el modelo base, LR calibra el sesgo residual.
+Input:  db/processed/rf_predictions_VERSION.npz
+Output: output/models/lr_meta_model_VERSION.joblib, output/tables/models/evaluation_results_VERSION.csv
+Uso: python3 src/models/train_stacking.py v3
 """
 
 import numpy as np
@@ -11,11 +12,13 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import joblib
 import os
+import sys
 
-# Configuracion (v2)
-RF_PRED_PATH = "db/processed/rf_predictions_v2.npz"
-LR_MODEL_PATH = "output/models/lr_meta_model_v2.joblib"
-EVAL_PATH = "output/tables/models/evaluation_results_v2.csv"
+# Configuracion
+version = sys.argv[1] if len(sys.argv) > 1 else "v1"
+RF_PRED_PATH = f"db/processed/rf_predictions_{version}.npz"
+LR_MODEL_PATH = f"output/models/lr_meta_model_{version}.joblib"
+EVAL_PATH = f"output/tables/models/evaluation_results_{version}.csv"
 RANDOM_STATE = 42
 
 
