@@ -1,0 +1,49 @@
+\begin{thebibliography}{1}
+
+\bibitem{aceves2026ia}
+Marco Aceves.
+\newblock De 0 a 100 en inteligencia artificial, 2026.
+\newblock Material del curso.
+
+\bibitem{kaggle_sbux}
+Hassan~Jameel Ahmed.
+\newblock Starbucks stock dataset 2000-2026, 2026.
+\newblock Kaggle. Disponible en:
+  \url{https://www.kaggle.com/datasets/hassanjameelahmed/starbucks-stock-dataset-20002026}.
+
+\bibitem{breiman2001random}
+Leo Breiman.
+\newblock Random forests.
+\newblock {\em Machine Learning}, 45(1):5--32, 2001.
+
+\bibitem{fama1970efficient}
+Eugene~F. Fama.
+\newblock Efficient capital markets: A review of theory and empirical work.
+\newblock {\em The Journal of Finance}, 25(2):383--417, 1970.
+
+\bibitem{gu2020empirical}
+Shihao Gu, Bryan Kelly, and Dacheng Xiu.
+\newblock Empirical asset pricing via machine learning.
+\newblock {\em Review of Financial Studies}, 33(5):2223--2273, 2020.
+
+\bibitem{matplotlib_docs}
+{Matplotlib Development Team}.
+\newblock Matplotlib: Python 2d plotting library, 2026.
+\newblock \url{https://matplotlib.org/}.
+
+\bibitem{mckinney2010pandas}
+Wes McKinney.
+\newblock pandas: a foundational python library for data analysis, 2010.
+\newblock Presentado en PyCon 2010.
+
+\bibitem{pandas_docs}
+{Pandas Development Team}.
+\newblock pandas: Python data analysis library, 2026.
+\newblock \url{https://pandas.pydata.org/}.
+
+\bibitem{pedregosa2011scikit}
+F.~Pedregosa, G.~Varoquaux, A.~Gramfort, et~al.
+\newblock Scikit-learn: Machine learning in python.
+\newblock {\em Journal of Machine Learning Research}, 12:2825--2830, 2011.
+
+\end{thebibliography}
